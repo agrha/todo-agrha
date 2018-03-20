@@ -1,13 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const User = require('../controllers/users')
-const Fblogin = require('../controllers/Fblogin')
-const middleware = require('../middleware/fb')
+const UserController = require('../controllers/users')
+const Auth = require('../middleware/auth')
 
-// router.post('/signup',User.signUp)
-// router.post('/signin',User.signIn)
-router.post('/facebooklogin',middleware,Fblogin.signin)
+router.post('/facebooklogin',UserController.loginFacebook)
 
     
 module.exports=router;

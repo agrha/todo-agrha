@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var cors = require('cors')
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 var todos = require('./routes/todos')
 var signin = require ('./routes/signin')
 var mongoose = require('mongoose')
@@ -27,7 +26,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/todos', todos);
 app.use('/signin', signin);
 
