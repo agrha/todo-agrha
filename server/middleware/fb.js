@@ -1,13 +1,23 @@
 const FB = require('fb')
-let fb = new FB.Facebook({
-    version:'v2.8'
+const facebook = new FB.Facebook({
+    appId:process.env.APPID,
+    appSecrete:process.env.APPSECRETE
 })
 
-const fbAuth = (req,res,next) => {
-    FB.setAccessToken(req.headers.accesstokenfb)
-    next()
-}
-
-module.exports = {
-    fbAuth
+module.exports= function fb(req,res,next) {
+    let accessToken = req.body.accessToken
+    if(accessToken){
+        facebook.api('me',{
+        fields : ['id','name','email'],
+        access_token:req.body.accessToken
+    }).then(response=>{
+        req.fbProfile = response
+        next()
+    }).catch(err=>{
+        res.status(500).json({message:err})
+    })
+    } else{
+        res.status(403).json({message:'require access token'})
+    }
+    
 }

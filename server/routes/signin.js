@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
-const userController = require('../controllers/users')
-const authFacebook = require('../middleware/fb')
+const express = require('express')
+const router = express.Router()
 
-/* GET users listing. */
-router.post('/',authFacebook.fbAuth)
+const User = require('../controllers/users')
+const Fblogin = require('../controllers/Fblogin')
+const middleware = require('../middleware/fb')
 
-module.exports = router;
+// router.post('/signup',User.signUp)
+// router.post('/signin',User.signIn)
+router.post('/facebooklogin',middleware,Fblogin.signin)
+
+    
+module.exports=router;

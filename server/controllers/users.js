@@ -1,4 +1,4 @@
-const FB = require('fb'),
+const FB = require('fb')
 const fb = new FB.Facebook({
     version:'v2.8'
 })
@@ -6,7 +6,7 @@ const jwt = require ('jsonwebtoken')
 const User = require ('../models/Users')
 const Todo = require ('../models/Todos')
 
-class User {
+class UserController {
   static signinUser(req,res){
     FB.api('/me',{fields:['name','email']},function(response){
       User.findOne({email:response.email})
@@ -71,3 +71,5 @@ class User {
     })
   }
 }
+
+module.exports = UserController
