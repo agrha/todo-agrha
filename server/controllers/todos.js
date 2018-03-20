@@ -4,11 +4,15 @@ class TodoController {
   static createTodo(req,res){
     let todo = {
         name: req.body.name,
-        userId :req.headers.userId
+        userId :req.decoded._id,
+        status : false
     }
     Todo.create(todo)
     .then(data=>{
-      res.status(200).send({message:'todo created',data})
+      res.status(200).send({
+        message:'todo created',
+        data
+      })
     })
     .catch(err=>{
       res.status(500).send({
@@ -20,11 +24,14 @@ class TodoController {
 
   static findTodo(req,res){
     Todo.find({
-      userId:req.headers.userId
+      userId:req.decoded._id
     })
     .populate('userId')
     .then(data=>{
-      res.status(200).send({message:'your todolist',data})
+      res.status(200).send({
+        message:'your todolist',
+        data
+      })
     })
     .catch(err=>{
       res.status(500).send({
@@ -75,7 +82,7 @@ class TodoController {
       data.save()
       .then(result=>{
         res.status(200).send({
-          message:'todo completed',
+          message:'todo status changed',
           data
         })
       })

@@ -1,69 +1,52 @@
 const FB = require('fb')
-const fb = new FB.Facebook({
-    version:'v2.8'
-})
 const jwt = require ('jsonwebtoken')
 const User = require ('../models/Users')
 const Todo = require ('../models/Todos')
 
 class UserController {
-  static signinUser(req,res){
-    FB.api('/me',{fields:['name','email']},function(response){
-      User.findOne({email:response.email})
-      .then(data=>{
-        if(data){
-          let payload ={
-            email:data.email,
-            name:data.name,
-            id:data._id
-          }
-          Todo.find(
-            {userId:req.headers.userid}
-          )
-          .populate('userId')
-          .then(dataTodos=>{
-            let token = jwt.sign(payload,'secret key')
-            res.status(200).send({
-              message:'heres your todo list',
-              data: token,
-              userdata: data,
-              tododata:dataTodos
-            })
-          })
-          .catch(err=>{
-            res.status(500).send({
-              message:'something went wrong',
-              err
+  static loginFacebook (req, res) {
+    FB.setAccessToken(req.headers.fbtoken)
+    FB.api('/me', { fields: 'name, email, picture' })
+    .then(data => {
+      Users.findOne({
+        name    : data.name,
+        email   : data.email
+      })
+      .then(user => {
+        if (user) {
+          jwt.sign({ user }, 'secret key', (err, token) => {
+            console.log(user)
+            res.status(200).json({
+              message     : `logged in ${user.name}`,              
+              name        : user.name, 
+              email       : user.email,
+              profileUrl  : user.picture,
+              apptoken    : token,
             })
           })
         } else {
-          User.create({
-            name:response.name,
-            email:response.email
+          Users.create({
+            name    : data.name,
+            email   : data.email,
+            picture : data.picture.data.url
           })
-          .then(createdUser =>{
-            let user = {
-              email:createdUser.email,
-              name:createdUser.name,
-              id:createdUser._id
-            }
-            let token = jwt.sign(user,'secret key')
-            res.status(200).send({
-              message:'user baru telah dibuat',
-              data:token,
-              user:createdUser
-            })
-          })
-          .catch(err=>{
-            res.status(500).send({
-              message:'something went wrong',
-              err
+          .then(createdUser => {
+            let user = createdUser
+            jwt.sign({ user }, 'secret key', (err, token) => {
+              console.log(user)
+              res.status(200).json({                
+                message     : `new user ${user.name}`,
+                name        : user.name, 
+                email       : user.email,
+                profileUrl  : user.picture,
+                apptoken    : token,
+              })
             })
           })
         }
       })
-      .catch(err=>{
-        res.status(500).send({
+      .catch(err => {
+        res.status(400).json({
           message:'something went wrong',
           err
         })
