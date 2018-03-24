@@ -10,7 +10,7 @@ let router = new Router({
     {
       meta: {auth: true},
       path: '/',
-      name: 'Todo',
+      name: 'TodoList',
       component: TodoList
     },
     {
@@ -21,16 +21,16 @@ let router = new Router({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.auth)) {
-//     if (localStorage.getItem('token')) {
-//       next()
-//     } else {
-//       next({name: 'LoginComponent'})
-//     }
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.auth)) {
+    if (localStorage.getItem('token')) {
+      next()
+    } else {
+      next({name: 'LoginComponent'})
+    }
+  } else {
+    next()
+  }
+})
 
 export default router

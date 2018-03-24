@@ -2,6 +2,7 @@ const Todo = require('../models/Todos')
 
 class TodoController {
   static createTodo(req,res){
+    console.log(req.body)
     let todo = {
         name: req.body.name,
         userId :req.decoded._id,
@@ -23,17 +24,23 @@ class TodoController {
   }
 
   static findTodo(req,res){
-    Todo.find({
+    // console.log('============>>>>>>>>',req.decoded)
+    let target = {
       userId:req.decoded._id
-    })
+    }
+    // console.log(target)
+    Todo.find(target)
     .populate('userId')
+    // .exec()
     .then(data=>{
+      // console.log(data)
       res.status(200).send({
         message:'your todolist',
         data
       })
     })
     .catch(err=>{
+      console.log('ini error')
       res.status(500).send({
         message:'something went wrong',
         err
@@ -78,6 +85,7 @@ class TodoController {
   static completeTodo(req,res){
     Todo.findById(req.params.id)
     .then(data=>{
+      console.log(data.status)
       data.status = !data.status
       data.save()
       .then(result=>{

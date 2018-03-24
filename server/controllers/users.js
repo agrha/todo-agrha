@@ -5,10 +5,11 @@ const Todo = require ('../models/Todos')
 
 class UserController {
   static loginFacebook (req, res) {
-    FB.setAccessToken(req.headers.fbtoken)
+    console.log('ini req body',req.body)
+    FB.setAccessToken(req.body.token)
     FB.api('/me', { fields: 'name, email, picture' })
     .then(data => {
-      Users.findOne({
+      User.findOne({
         name    : data.name,
         email   : data.email
       })
@@ -16,8 +17,8 @@ class UserController {
         if (user) {
           jwt.sign({ user }, 'secret key', (err, token) => {
             console.log(user)
-            res.status(200).json({
-              message     : `logged in ${user.name}`,              
+            res.status(200).json({                
+              message     : `new user ${user.name}`,
               name        : user.name, 
               email       : user.email,
               profileUrl  : user.picture,
@@ -25,7 +26,7 @@ class UserController {
             })
           })
         } else {
-          Users.create({
+          User.create({
             name    : data.name,
             email   : data.email,
             picture : data.picture.data.url
@@ -33,6 +34,7 @@ class UserController {
           .then(createdUser => {
             let user = createdUser
             jwt.sign({ user }, 'secret key', (err, token) => {
+              // localStorage.setItem('apptoken',token)
               console.log(user)
               res.status(200).json({                
                 message     : `new user ${user.name}`,

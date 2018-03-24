@@ -10,8 +10,9 @@ var index = require('./routes/index');
 var todos = require('./routes/todos')
 var signin = require ('./routes/signin')
 var mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/todos')
+mongoose.connect('mongodb://localhost/todo-agrha')
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors())
 
 app.use('/', index);
 app.use('/todos', todos);
