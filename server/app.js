@@ -9,8 +9,10 @@ var cors = require('cors')
 var index = require('./routes/index');
 var todos = require('./routes/todos')
 var signin = require ('./routes/signin')
+var mongodbUri = 'mongodb://agrha:daun10lembar@ds117469.mlab.com:17469/to-do'
+var localhost = 'mongodb://localhost/to-do-agrha'
 var mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/todo-agrha')
+mongoose.connect(mongodbUri)
 var app = express();
 
 
