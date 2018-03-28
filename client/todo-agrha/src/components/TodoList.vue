@@ -19,7 +19,7 @@ import axios from 'axios'
 import Todo from '@/components/Todo'
 import CreateTodo from '@/components/CreateTodo'
 import NavBar from '@/components/NavBar'
-let url = `http://localhost:3000/todos`
+let url = `http://35.185.45.157/todos`
 export default {
   components: {
     Todo, CreateTodo, NavBar

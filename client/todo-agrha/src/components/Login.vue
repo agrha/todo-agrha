@@ -21,6 +21,8 @@
 <script>
 import axios from 'axios'
 import FB from 'fb'
+let url = `http://35.185.45.157`
+
 export default {
   name: 'Login',
   data () {
@@ -36,7 +38,7 @@ export default {
       // console.log(response)
       FB.api('/me', {fields: 'name,email,id'}, dude => {
         let fbtoken = response.authResponse.accessToken
-        axios.post('http://localhost:3000/signin/facebooklogin', {'token': fbtoken})
+        axios.post(`${url}/signin/facebooklogin`, {'token': fbtoken})
           .then(resp => {
             console.log(resp.data)
             let fbtoken = resp.data.apptoken
