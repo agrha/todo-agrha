@@ -8,15 +8,15 @@ Vue.use(Router)
 let router = new Router({
   routes: [
     {
-      meta: {auth: true},
       path: '/',
-      name: 'TodoList',
-      component: TodoList
-    },
-    {
-      path: '/login',
       name: 'LoginComponent',
       component: Login
+    },
+    {
+      meta: {auth: true},
+      path: '/todolist',
+      name: 'TodoList',
+      component: TodoList
     }
   ]
 })

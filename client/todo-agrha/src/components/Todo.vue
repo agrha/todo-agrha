@@ -17,10 +17,10 @@
         <div class='ui form'>
           <div class='field'>
             <label>Name</label>
-            <input type='text' v-model="todo.name" >
+            <input type='text' v-model="todoname" >
           </div>
           <div class='ui two button attached buttons'>
-            <button class='ui basic blue button' v-on:click="hideForm">
+            <button class='ui basic blue button' v-on:click="updateTodo(todo)">
               Close X
             </button>
           </div>
@@ -43,6 +43,7 @@ export default {
   props: ['todo'],
   data () {
     return {
+      todoname: '',
       isEditing: false
     }
   },
@@ -58,6 +59,17 @@ export default {
     },
     completeTodo (todo) {
       this.$emit('complete-todo', todo)
+    },
+    updateTodo (todo) {
+      let obj = {
+        id: todo._id,
+        edit: {
+          name: this.todoname
+        }
+      }
+      console.log(obj)
+      this.$emit('update-todo', obj)
+      this.hideForm()
     }
   }
 }

@@ -1,11 +1,11 @@
 <template>
   <div style = 'margin-top 200px'>
-    <!-- <p>Completed Tasks:{{todos.filter(todo=>{return todo.done === true}).length}}</p>
-    <p>Completed Tasks:{{todos.filter(todo=>{return todo.done === false}).length}}</p> -->
+      <NavBar/>
        <todo
-       v-for="(todo, i) in todos" :key="i" 
+       v-for="(todo, i) in todos" :key="i"
        v-on:complete-todo = "completeTodo"
        v-on:delete-todo= "deleteTodo"
+       v-on:update-todo= 'updateTodo'
        v-bind:todo="todo">
        </todo>
     <create-todo
@@ -18,9 +18,11 @@
 import axios from 'axios'
 import Todo from '@/components/Todo'
 import CreateTodo from '@/components/CreateTodo'
+import NavBar from '@/components/NavBar'
+let url = `http://localhost:3000/todos`
 export default {
   components: {
-    Todo, CreateTodo
+    Todo, CreateTodo, NavBar
   },
   data () {
     return {
@@ -30,7 +32,7 @@ export default {
   methods: {
     deleteTodo (todo) {
       console.log(todo)
-      axios.delete(`http://localhost:3000/todos/${todo}`, {headers: { apptoken: localStorage.getItem('token')}})
+      axios.delete(`${url}/${todo}`, {headers: {apptoken: localStorage.getItem('token')}})
         .then(response => {
           console.log(response)
           this.getTodo()
@@ -40,7 +42,7 @@ export default {
         })
     },
     completeTodo (todo) {
-      axios.put(`http://localhost:3000/todos/${todo}/complete`,{}, {headers: { apptoken: localStorage.getItem('token')}})
+      axios.put(`${url}/${todo}/complete`, {}, {headers: {apptoken: localStorage.getItem('token')}})
         .then(response => {
           console.log(response)
           this.getTodo()
@@ -50,7 +52,7 @@ export default {
         })
     },
     addTodo (todo) {
-      axios.post(`http://localhost:3000/todos/`,todo, {headers: { apptoken: localStorage.getItem('token')}})
+      axios.post(`${url}`, todo, {headers: {apptoken: localStorage.getItem('token')}})
         .then(response => {
           console.log(response)
           this.getTodo()
@@ -61,13 +63,25 @@ export default {
     },
     getTodo () {
       // let self = this
-      axios.get('http://localhost:3000/todos', {headers: { apptoken: localStorage.getItem('token')}})
+      axios.get(`${url}`, {headers: {apptoken: localStorage.getItem('token')}})
         .then(response => {
           // console.log(response.data.data)
           this.todos = response.data.data
         })
         .catch((err) => {
           console.log('erorrrrrr ', err)
+        })
+    },
+    updateTodo (todo) {
+      console.log(todo.id)
+      console.log(todo.edit)
+      axios.put(`${url}/${todo.id}`, todo.edit, {headers: {apptoken: localStorage.getItem('token')}})
+        .then(response => {
+          console.log('updated data', response)
+          this.getTodo()
+        })
+        .catch(err => {
+          console.log('error update data', err)
         })
     }
   },

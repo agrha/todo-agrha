@@ -47,7 +47,7 @@ export default {
             localStorage.setItem('email', email)
             localStorage.setItem('name', name)
             localStorage.setItem('profileUrl', profileUrl)
-            window.location.href = '/'
+            this.$router.push('TodoList')
           })
       })
     },
